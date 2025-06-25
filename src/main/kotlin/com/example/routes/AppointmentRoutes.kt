@@ -1,14 +1,14 @@
 package com.example.routes
 
-import com.example.Database
-import com.example.services.AppointmentService
+import com.example.DatabaseConection
+import com.example.domain.services.AppointmentService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.appointmentRoutes() {
-    val appointmentService = AppointmentService(Database.getConnection())
+    val appointmentService = AppointmentService(DatabaseConection.getConnection())
     route("appointments") {
         get("{id?}") {
             try {

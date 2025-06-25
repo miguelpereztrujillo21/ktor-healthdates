@@ -1,10 +1,6 @@
-package com.example.models
+package com.example.models_old
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import java.sql.Timestamp
-import java.time.LocalDateTime
-import java.util.Date
 
 @Serializable
 data class Appointment(

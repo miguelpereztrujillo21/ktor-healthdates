@@ -1,6 +1,6 @@
-package com.example.services
+package com.example.domain.services
 
-import com.example.models.User
+import com.example.models_old.UserOld
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.sql.Connection
@@ -10,11 +10,11 @@ class UserService (private val connection: Connection){
         private const val SELECT_ALL_USERS = "SELECT * from users"
     }
 
-    suspend fun getAllUsers() : ArrayList<User> = withContext(Dispatchers.IO) {
+    suspend fun getAllUsers() : ArrayList<UserOld> = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(SELECT_ALL_USERS)
         val resultSet = statement.executeQuery()
 
-        val userList = ArrayList<User>()
+        val userList = ArrayList<UserOld>()
 
         while (resultSet.next()) {
             val name = resultSet.getString("user_name")
@@ -22,7 +22,7 @@ class UserService (private val connection: Connection){
             val email = resultSet.getString("email")
             val address = resultSet.getString("address")
 
-            val user = User(userId, name, email, address)
+            val user = UserOld(userId, name, email, address)
             userList.add(user)
         }
 

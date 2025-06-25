@@ -1,6 +1,6 @@
-package com.example.services
+package com.example.domain.services
 
-import com.example.models.Appointment
+import com.example.models_old.Appointment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.sql.Connection

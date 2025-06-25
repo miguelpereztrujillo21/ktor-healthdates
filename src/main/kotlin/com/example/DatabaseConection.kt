@@ -3,7 +3,7 @@ package com.example
 import java.sql.Connection
 import java.sql.DriverManager
 
-object Database {
+object DatabaseConection {
     @JvmStatic
     fun getConnection() : Connection {
         val connection = DriverManager.getConnection(

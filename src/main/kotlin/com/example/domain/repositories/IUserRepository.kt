@@ -1,9 +1,8 @@
-package com.example.domain.repository
+package com.example.domain.repositories
 
 import com.example.domain.models.User
 
-ç
 interface IUserRepository {
-    suspend fun create(user: User): Boolean
+    suspend fun create(user: User): String
     suspend fun findByEmail(email: String): User?
 }
