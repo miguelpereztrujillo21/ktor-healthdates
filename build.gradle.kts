@@ -6,6 +6,7 @@ val postgresql_driver_version: String by project
 
 plugins {
     kotlin("jvm") version "1.9.23"
+    kotlin("kapt") version "1.9.23"
     id("io.ktor.plugin") version "2.3.9"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.23"
 }
@@ -39,4 +40,6 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("org.mindrot:jbcrypt:0.4")
+    implementation("com.google.dagger:dagger:2.51")
+    kapt("com.google.dagger:dagger-compiler:2.51")
 }
