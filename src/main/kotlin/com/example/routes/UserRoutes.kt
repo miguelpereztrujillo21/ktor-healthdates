@@ -26,10 +26,6 @@ fun Route.userRegisterRoute(userRepository: IUserRepository) {
             createdAt = LocalDateTime.now().toString()
         )
         val userId = userRepository.create(user)
-        if (userId != null) {
-            call.respondText("Usuario registrado con id: $userId")
-        } else {
-            call.respondText("Error al registrar usuario", status = io.ktor.http.HttpStatusCode.InternalServerError)
-        }
+        call.respondText("Usuario registrado con id: $userId")
     }
 }
