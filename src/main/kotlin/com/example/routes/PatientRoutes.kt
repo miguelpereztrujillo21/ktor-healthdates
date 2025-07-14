@@ -1,10 +1,12 @@
 package com.example.routes
 
+
 import com.example.routes.models.RegisterPatientRequest
 import com.example.domain.models.Patient
 import com.example.domain.usecases.RegisterPatientUseCase
 import com.example.domain.utils.constants.Routes
 import com.example.domain.utils.constants.StatusCodeConstants
+import com.example.routes.mappers.toDomain
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -18,15 +20,7 @@ fun Route.patientRoutes(registerPatientUseCase: RegisterPatientUseCase) {
     post(Routes.PATIENTREGISTER) {
         try {
             val req = call.receive<RegisterPatientRequest>()
-            val patient = Patient(
-                firstName = req.firstName,
-                lastName = req.lastName,
-                birthDate = req.birthDate?.let { LocalDate.parse(it) },
-                gender = req.gender,
-                address = req.address,
-                phone = req.phone,
-                createdAt = LocalDateTime.now().toString()
-            )
+            val patient = req.toDomain()
             registerPatientUseCase.register(req.email, req.password, patient)
             call.respond(HttpStatusCode.Created, StatusCodeConstants.PATIENT_REGISTERED)
         } catch (e: IllegalArgumentException) {

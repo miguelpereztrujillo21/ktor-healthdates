@@ -3,7 +3,7 @@ package com.example.routes.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegisterPatientRequest(
+data class  RegisterPatientRequest(
     val id : String? = null,
     val userId: String? = null,
     val email: String,
