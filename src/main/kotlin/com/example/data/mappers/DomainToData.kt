@@ -5,7 +5,7 @@ import com.example.data.tables.Patients
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import java.time.LocalDateTime
 
-fun Patient.toInsertStatementData(statement: InsertStatement<Number>) {
+fun Patient.toInsertPatientData(statement: InsertStatement<Number>) {
     statement[Patients.firstName] = this.firstName
     statement[Patients.lastName] = this.lastName
     statement[Patients.birthDate] = this.birthDate
