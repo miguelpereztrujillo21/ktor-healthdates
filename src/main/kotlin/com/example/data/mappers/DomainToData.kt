@@ -1,6 +1,8 @@
 package com.example.data.mappers
 
+import com.example.domain.models.Appointment
 import com.example.domain.models.Patient
+import com.example.data.tables.Appointments
 import com.example.data.tables.Patients
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import java.time.LocalDateTime
@@ -15,4 +17,16 @@ fun Patient.toInsertPatientData(statement: InsertStatement<Number>) {
     statement[Patients.address] = this.address
     statement[Patients.phone] = this.phone
     statement[Patients.createdAt] = LocalDateTime.now()
+}
+
+fun Appointment.toInsertAppointmentData(statement: InsertStatement<Number>) {
+    statement[Appointments.patientId] = UUID.fromString(this.patientId)
+    statement[Appointments.doctorId] = UUID.fromString(this.doctorId)
+    this.serviceId?.let { statement[Appointments.serviceId] = it }
+    this.procedureId?.let { statement[Appointments.procedureId] = it }
+    statement[Appointments.appointmentDatetime] = this.appointmentDatetime
+    statement[Appointments.durationMinutes] = this.durationMinutes
+    statement[Appointments.reason] = this.reason
+    statement[Appointments.status] = this.status
+    statement[Appointments.createdAt] = this.createdAt
 }

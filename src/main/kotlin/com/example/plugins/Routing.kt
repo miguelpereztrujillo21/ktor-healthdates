@@ -13,7 +13,8 @@ fun Application.configureRouting() {
         patientRoutes(
             registerPatientUseCase = appComponent.registerPatientUseCase(),
             loginPatientUseCase = appComponent.loginPatientUseCase(),
-            getPatientAppointmentsUseCase = appComponent.getPatientAppointmentsUseCase()
+            getPatientAppointmentsUseCase = appComponent.getPatientAppointmentsUseCase(),
+            bookAppointmentUseCase = appComponent.bookAppointmentUseCase()
         )
     }
 }

@@ -4,4 +4,5 @@ import com.example.domain.models.Appointment
 
 interface IAppointmentRepository {
     suspend fun getAppointmentsByPatientId(patientId: String, onlyUpcoming: Boolean = false): List<Appointment>
+    suspend fun createAppointment(appointment: Appointment): Appointment
 }

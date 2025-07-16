@@ -2,14 +2,17 @@ package com.example.routes
 
 
 import com.example.routes.models.RegisterPatientRequest
+import com.example.routes.models.LoginRequest
+import com.example.routes.models.BookAppointmentRequest
 import com.example.domain.usecases.LoginPatientUseCase
 import com.example.domain.usecases.RegisterPatientUseCase
 import com.example.domain.usecases.IGetPatientAppointmentsUseCase
+import com.example.domain.usecases.IBookAppointmentUseCase
 import com.example.domain.utils.constants.Routes
 import com.example.domain.utils.constants.StatusCodeConstants
 import com.example.routes.mappers.toDomain
 import com.example.routes.mappers.toResponseList
-import com.example.routes.models.LoginRequest
+import com.example.routes.mappers.toResponse
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.*
@@ -20,7 +23,8 @@ import io.ktor.server.routing.*
 fun Route.patientRoutes(
     registerPatientUseCase: RegisterPatientUseCase,
     loginPatientUseCase: LoginPatientUseCase,
-    getPatientAppointmentsUseCase: IGetPatientAppointmentsUseCase
+    getPatientAppointmentsUseCase: IGetPatientAppointmentsUseCase,
+    bookAppointmentUseCase: IBookAppointmentUseCase
 ) {
     post(Routes.PATIENTREGISTER) {
         try {
@@ -55,6 +59,24 @@ fun Route.patientRoutes(
 
             val appointments = getPatientAppointmentsUseCase.getAppointments(token, onlyUpcoming)
             call.respond(HttpStatusCode.OK, appointments.toResponseList())
+        } catch (e: IllegalArgumentException) {
+            call.respond(HttpStatusCode.BadRequest, "Error: ${e.message}")
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, "Error interno del servidor")
+        }
+    }
+    post(Routes.BOOK_APPOINTMENT) {
+        try {
+            val authHeader = call.request.headers["Authorization"]
+            val token = authHeader?.removePrefix("Bearer ")
+                ?: throw IllegalArgumentException("Token de autorización requerido")
+
+            val request = call.receive<BookAppointmentRequest>()
+            val bookingData = request.toDomain() // Mapper de presentación a dominio
+
+            val appointment = bookAppointmentUseCase.bookAppointment(token, bookingData)
+
+            call.respond(HttpStatusCode.Created, appointment.toResponse())
         } catch (e: IllegalArgumentException) {
             call.respond(HttpStatusCode.BadRequest, "Error: ${e.message}")
         } catch (e: Exception) {

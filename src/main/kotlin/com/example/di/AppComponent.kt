@@ -6,6 +6,7 @@ import com.example.domain.repositories.IAppointmentRepository
 import com.example.domain.usecases.IGetPatientAppointmentsUseCase
 import com.example.domain.usecases.LoginPatientUseCase
 import com.example.domain.usecases.RegisterPatientUseCase
+import com.example.domain.usecases.IBookAppointmentUseCase
 import dagger.Component
 import javax.inject.Singleton
 
@@ -20,4 +21,5 @@ interface AppComponent {
     fun registerPatientUseCase(): RegisterPatientUseCase
     fun loginPatientUseCase(): LoginPatientUseCase
     fun getPatientAppointmentsUseCase(): IGetPatientAppointmentsUseCase
+    fun bookAppointmentUseCase(): IBookAppointmentUseCase
 }
