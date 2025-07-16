@@ -16,7 +16,9 @@ version = "0.0.1"
 
 application {
     mainClass.set("com.example.ApplicationKt")
-
+    applicationDefaultJvmArgs = listOf(
+        "--add-modules", "java.xml.bind"
+    )
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
@@ -38,8 +40,13 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
-    implementation("com.google.code.gson:gson:2.8.8")
+    implementation("com.google.code.gson:gson:2.8.9")
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("com.google.dagger:dagger:2.51")
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:3.0.1")
+    implementation("org.glassfish.jaxb:jaxb-runtime:3.0.1")
     kapt("com.google.dagger:dagger-compiler:2.51")
 }

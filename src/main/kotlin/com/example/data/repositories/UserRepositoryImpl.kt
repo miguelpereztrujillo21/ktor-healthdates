@@ -17,7 +17,7 @@ class UserRepositoryImpl : IUserRepository {
                 it[Users.role] = user.role
                 it[Users.createdAt] = LocalDateTime.now()
             }
-            inserted[Users.id]?.toString() ?: throw Exception("No se pudo obtener el id")
+            inserted[Users.id].toString()
         }
     }
 
