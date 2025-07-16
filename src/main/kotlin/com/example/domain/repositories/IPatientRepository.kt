@@ -4,4 +4,5 @@ import com.example.domain.models.Patient
 
 interface IPatientRepository {
     suspend fun insertPatient(patient: Patient)
+    suspend fun findByUserId(userId: String?): Patient?
 }

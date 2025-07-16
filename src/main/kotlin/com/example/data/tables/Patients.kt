@@ -7,7 +7,7 @@ import java.util.UUID
 
 object Patients : Table() {
     val id = uuid("id").clientDefault { UUID.randomUUID() }
-    val user_id = uuid("user_id").nullable()
+    val userId = uuid("user_id").nullable()
     val firstName = varchar("first_name", 50)
     val lastName = varchar("last_name", 50)
     val birthDate = date("birth_date").nullable()

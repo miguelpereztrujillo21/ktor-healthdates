@@ -1,26 +1,34 @@
 package com.example
 
-import com.example.di.DaggerAppComponent
+import com.example.config.AppConfig
+import com.example.data.tables.Appointments
+import com.example.data.tables.Patients
+import com.example.data.tables.Users
 import com.example.plugins.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "127.0.0.1", module = Application::module)
+    embeddedServer(Netty, port = AppConfig.serverPort, host = AppConfig.serverHost, module = Application::module)
         .start(wait = true)
-    val appComponent = DaggerAppComponent.create()
-    val userRepository = appComponent.userRepository()
 }
 
 fun Application.module() {
     Database.connect(
-        url = "jdbc:postgresql://localhost:5432/medical_db",
-        driver = "org.postgresql.Driver",
-        user = "admin",
-        password = "adminpassword"
+        url = AppConfig.databaseUrl,
+        driver = AppConfig.databaseDriver,
+        user = AppConfig.databaseUser,
+        password = AppConfig.databasePassword
     )
+
+    transaction {
+        SchemaUtils.create(Users, Patients, Appointments)
+    }
+
     configureSerialization()
     configureRouting()
 }

@@ -1,11 +1,13 @@
 package com.example.data.repositories
 
+import com.example.data.mappers.toDomainPatient
 import com.example.data.mappers.toInsertPatientData
 import com.example.data.tables.Patients
 import com.example.domain.models.Patient
 import com.example.domain.repositories.IPatientRepository
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.UUID
 
 class PatientRepositoryImpl : IPatientRepository {
     override suspend fun insertPatient(patient: Patient) {
@@ -13,6 +15,14 @@ class PatientRepositoryImpl : IPatientRepository {
             Patients.insert {
                 patient.toInsertPatientData(it)
             }
+        }
+    }
+
+    override suspend fun findByUserId(userId: String?): Patient? {
+        return transaction {
+            Patients.select { Patients.userId eq UUID.fromString(userId) }
+                .singleOrNull()
+                ?.toDomainPatient()
         }
     }
 }

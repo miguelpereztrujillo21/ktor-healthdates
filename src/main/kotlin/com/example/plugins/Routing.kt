@@ -1,22 +1,19 @@
 package com.example.plugins
 
 import com.example.di.DaggerAppComponent
-import com.example.domain.usecases.LoginPatientUseCase
-import com.example.domain.usecases.RegisterPatientUseCase
-import com.example.routes.appointmentRoutes
 import com.example.routes.patientRoutes
 import com.example.routes.userRegisterRoute
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
+    val appComponent = DaggerAppComponent.create()
     routing {
-        appointmentRoutes()
-        userRegisterRoute(DaggerAppComponent.create().userRepository())
-        patientRoutes(RegisterPatientUseCase(
-            DaggerAppComponent.create().userRepository(),
-            DaggerAppComponent.create().patientRepository()), LoginPatientUseCase(DaggerAppComponent.create().userRepository())
-            )
+        userRegisterRoute(appComponent.userRepository())
+        patientRoutes(
+            registerPatientUseCase = appComponent.registerPatientUseCase(),
+            loginPatientUseCase = appComponent.loginPatientUseCase(),
+            getPatientAppointmentsUseCase = appComponent.getPatientAppointmentsUseCase()
+        )
     }
-
 }

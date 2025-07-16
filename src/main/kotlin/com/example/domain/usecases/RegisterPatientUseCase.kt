@@ -1,5 +1,6 @@
 package com.example.domain.usecases
 
+import com.example.config.AppConfig
 import com.example.domain.models.Patient
 import com.example.domain.models.User
 import com.example.domain.repositories.IPatientRepository
@@ -16,7 +17,7 @@ class RegisterPatientUseCase(
 ) {
     suspend fun register(email: String, password: String, patient: Patient) {
         require(email.isNotBlank()) { ErrorConstants.ERROR_EMPTY_EMAIL }
-        require(password.length >= 8) { ErrorConstants.ERROR_PASSWORD_TOO_SHORT }
+        require(password.length >= AppConfig.passwordMinLength) { ErrorConstants.ERROR_PASSWORD_TOO_SHORT }
         require(patient.firstName.isNotBlank()) { ErrorConstants.ERROR_EMPTY_FIRST_NAME }
         require(patient.lastName.isNotBlank()) { ErrorConstants.ERROR_EMPTY_LAST_NAME }
         require(RegexConstants.EMAIL_REGEX.matches(email)){ ErrorConstants.ERROR_INVALID_EMAIL_FORMAT }
@@ -30,7 +31,7 @@ class RegisterPatientUseCase(
             createdAt = LocalDateTime.now().toString()
         )
         val userId = userRepository.create(user)
-        val patientWithUserId = patient.copy(id = userId)
+        val patientWithUserId = patient.copy(userId = userId)
         patientRepository.insertPatient(patientWithUserId)
     }
 }

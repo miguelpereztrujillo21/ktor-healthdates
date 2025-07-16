@@ -5,4 +5,5 @@ object Routes {
     //PATIENT
     const val PATIENTREGISTER = "/register-patient"
     const val PATIENTLOGIN = "/login-patient"
+    const val PATIENT_APPOINTMENTS = "/patient-appointments"
 }
