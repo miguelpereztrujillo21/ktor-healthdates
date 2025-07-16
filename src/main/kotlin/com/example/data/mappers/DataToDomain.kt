@@ -1,4 +1,6 @@
 package com.example.data.mappers
 
-class DataToDomain {
-}
+import com.example.domain.models.Patient
+
+
+

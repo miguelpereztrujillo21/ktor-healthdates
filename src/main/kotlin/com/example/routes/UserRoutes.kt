@@ -5,15 +5,14 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import com.example.domain.models.User
+import com.example.domain.repositories.IUserRepository
 import com.example.domain.utils.constants.Routes
-
 import com.example.domain.utils.constants.UserParams
 import com.example.domain.utils.constants.UserRolesEnum
 import io.ktor.server.request.*
-
 import java.time.LocalDateTime
-fun Route.userRegisterRoute() {
-    val userRepository = UserRepositoryImpl()
+
+fun Route.userRegisterRoute(userRepository: IUserRepository) {
     post(Routes.REGISTER) {
         val params = call.receiveParameters()
         val email = params[UserParams.EMAIL] ?: return@post call.respondText("Falta email", status = io.ktor.http.HttpStatusCode.BadRequest)
@@ -27,10 +26,6 @@ fun Route.userRegisterRoute() {
             createdAt = LocalDateTime.now().toString()
         )
         val userId = userRepository.create(user)
-        if (userId != null) {
-            call.respondText("Usuario registrado con id: $userId")
-        } else {
-            call.respondText("Error al registrar usuario", status = io.ktor.http.HttpStatusCode.InternalServerError)
-        }
+        call.respondText("Usuario registrado con id: $userId")
     }
 }
