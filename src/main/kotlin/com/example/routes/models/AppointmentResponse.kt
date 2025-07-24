@@ -10,9 +10,9 @@ data class AppointmentResponse(
     val doctorId: String,
     val serviceId: Int?,
     val procedureId: Int?,
-    val appointmentDatetime: String, // Serializable como String
+    val appointmentDatetime: String,
     val durationMinutes: Int,
     val reason: String?,
     val status: String,
-    val createdAt: String // Serializable como String
+    val createdAt: String
 )

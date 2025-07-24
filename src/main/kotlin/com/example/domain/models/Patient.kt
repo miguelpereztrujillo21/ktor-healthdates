@@ -7,9 +7,16 @@ data class Patient(
     val userId: String? = null,
     val firstName: String,
     val lastName: String,
+    val secondLastName: String? = null,
     val birthDate: LocalDate?,
     val gender: String?,
     val address: String?,
+    val cityId: Int? = null,
     val phone: String?,
-    val createdAt: String
+    val mobilePhone: String? = null,
+    val emergencyContactName: String? = null,
+    val emergencyContactPhone: String? = null,
+    val nationalId: String? = null,
+    val socialSecurityNumber: String? = null,
+    val createdAt: String? = null
 )

@@ -12,10 +12,17 @@ fun Patient.toInsertPatientData(statement: InsertStatement<Number>) {
     this.userId?.let { statement[Patients.userId] = UUID.fromString(it) }
     statement[Patients.firstName] = this.firstName
     statement[Patients.lastName] = this.lastName
+    this.secondLastName?.let { statement[Patients.secondLastName] = it }
     statement[Patients.birthDate] = this.birthDate
     statement[Patients.gender] = this.gender
     statement[Patients.address] = this.address
+    this.cityId?.let { statement[Patients.cityId] = it }
     statement[Patients.phone] = this.phone
+    this.mobilePhone?.let { statement[Patients.mobilePhone] = it }
+    this.emergencyContactName?.let { statement[Patients.emergencyContactName] = it }
+    this.emergencyContactPhone?.let { statement[Patients.emergencyContactPhone] = it }
+    this.nationalId?.let { statement[Patients.nationalId] = it }
+    this.socialSecurityNumber?.let { statement[Patients.socialSecurityNumber] = it }
     statement[Patients.createdAt] = LocalDateTime.now()
 }
 

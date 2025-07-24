@@ -1,11 +1,7 @@
 package com.example.di
 
-import com.example.data.repositories.AppointmentRepositoryImpl
-import com.example.data.repositories.PatientRepositoryImpl
-import com.example.data.repositories.UserRepositoryImpl
-import com.example.domain.repositories.IAppointmentRepository
-import com.example.domain.repositories.IPatientRepository
-import com.example.domain.repositories.IUserRepository
+import com.example.data.repositories.*
+import com.example.domain.repositories.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -23,4 +19,16 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideAppointmentRepository(): IAppointmentRepository = AppointmentRepositoryImpl()
+
+    @Provides
+    @Singleton
+    fun provideMedicalServiceRepository(): IMedicalServiceRepository = MedicalServiceRepositoryImpl()
+
+    @Provides
+    @Singleton
+    fun provideMedicalProcedureRepository(): IMedicalProcedureRepository = MedicalProcedureRepositoryImpl()
+
+    @Provides
+    @Singleton
+    fun provideDoctorRepository(): IDoctorRepository = DoctorRepositoryImpl()
 }

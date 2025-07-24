@@ -1,9 +1,7 @@
 package com.example
 
 import com.example.config.AppConfig
-import com.example.data.tables.Appointments
-import com.example.data.tables.Patients
-import com.example.data.tables.Users
+import com.example.data.tables.*
 import com.example.plugins.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -26,7 +24,11 @@ fun Application.module() {
     )
 
     transaction {
-        SchemaUtils.create(Users, Patients, Appointments)
+        SchemaUtils.create(
+            Users, Patients, Appointments,
+            MedicalServices, MedicalProcedures, Doctors,
+            ServiceProcedure, DoctorService
+        )
     }
 
     configureSerialization()

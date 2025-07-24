@@ -1,0 +1,365 @@
+{
+  "info": {
+    "name": "HealthDates API - Complete",
+    "description": "API completa para el sistema de citas médicas HealthDates con todas las funcionalidades implementadas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"paciente.nuevo@email.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"secondLastName\": \"González\",\n  \"birthDate\": \"1985-03-15\",\n  \"gender\": \"M\",\n  \"address\": \"Calle Mayor, 123\",\n  \"cityId\": 1,\n  \"phone\": \"91 555 1234\",\n  \"mobilePhone\": \"600 111 222\",\n  \"emergencyContactName\": \"María Pérez\",\n  \"emergencyContactPhone\": \"600 333 444\",\n  \"nationalId\": \"12345678A\",\n  \"socialSecurityNumber\": \"281234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/register-patient",
+              "host": ["{{baseUrl}}"],
+              "path": ["register-patient"]
+            },
+            "description": "Registra un nuevo paciente con todos los datos requeridos"
+          }
+        },
+        {
+          "name": "Login Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"paciente1@email.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login-patient",
+              "host": ["{{baseUrl}}"],
+              "path": ["login-patient"]
+            },
+            "description": "Inicia sesión y obtiene el token JWT"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('authToken', response.token);",
+                  "    console.log('Token guardado:', response.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Selection Flow",
+      "item": [
+        {
+          "name": "1. Get All Medical Services",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/selection/services",
+              "host": ["{{baseUrl}}"],
+              "path": ["selection", "services"]
+            },
+            "description": "Paso 1: Obtiene todos los servicios médicos disponibles (Cardiología, Dermatología, etc.)"
+          }
+        },
+        {
+          "name": "2. Get All Medical Procedures",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/selection/procedures",
+              "host": ["{{baseUrl}}"],
+              "path": ["selection", "procedures"]
+            },
+            "description": "Obtiene todos los procedimientos médicos disponibles"
+          }
+        },
+        {
+          "name": "3. Get Procedures by Service",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/selection/services/1/procedures",
+              "host": ["{{baseUrl}}"],
+              "path": ["selection", "services", "1", "procedures"]
+            },
+            "description": "Paso 2: Obtiene los procedimientos disponibles para un servicio específico (ej: serviceId = 1 para Cardiología)"
+          }
+        },
+        {
+          "name": "4. Get Doctors by Service",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/selection/services/1/doctors",
+              "host": ["{{baseUrl}}"],
+              "path": ["selection", "services", "1", "doctors"]
+            },
+            "description": "Paso 3: Obtiene los doctores disponibles para un servicio específico"
+          }
+        },
+        {
+          "name": "5. Get Available Doctors (Filtered)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/selection/doctors/available?serviceId=1&procedureId=1&date=2025-07-25",
+              "host": ["{{baseUrl}}"],
+              "path": ["selection", "doctors", "available"],
+              "query": [
+                {
+                  "key": "serviceId",
+                  "value": "1",
+                  "description": "ID del servicio médico (opcional)"
+                },
+                {
+                  "key": "procedureId",
+                  "value": "1",
+                  "description": "ID del procedimiento médico (opcional)"
+                },
+                {
+                  "key": "date",
+                  "value": "2025-07-25",
+                  "description": "Fecha deseada (opcional, formato YYYY-MM-DD)"
+                }
+              ]
+            },
+            "description": "Paso 4: Obtiene doctores disponibles con filtros opcionales de servicio, procedimiento y fecha"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "Get Patient Appointments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/patient-appointments",
+              "host": ["{{baseUrl}}"],
+              "path": ["patient-appointments"]
+            },
+            "description": "Obtiene todas las citas del paciente autenticado"
+          }
+        },
+        {
+          "name": "Book Appointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctorId\": \"doctor-uuid-here\",\n  \"serviceId\": 1,\n  \"procedureId\": 1,\n  \"appointmentDatetime\": \"2025-07-25T10:30:00\",\n  \"durationMinutes\": 30,\n  \"reason\": \"Consulta de revisión general\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/book-appointment",
+              "host": ["{{baseUrl}}"],
+              "path": ["book-appointment"]
+            },
+            "description": "Reserva una nueva cita médica"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Test Examples",
+      "item": [
+        {
+          "name": "Complete Flow Example",
+          "item": [
+            {
+              "name": "1. Login Test Patient",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"paciente1@email.com\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/login-patient",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["login-patient"]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 200) {",
+                      "    const response = pm.response.json();",
+                      "    pm.collectionVariables.set('authToken', response.token);",
+                      "}"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "2. Get Services",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/selection/services",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["selection", "services"]
+                }
+              }
+            },
+            {
+              "name": "3. Get Cardiología Procedures",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/selection/services/1/procedures",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["selection", "services", "1", "procedures"]
+                }
+              }
+            },
+            {
+              "name": "4. Get Cardiología Doctors",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/selection/services/1/doctors",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["selection", "services", "1", "doctors"]
+                }
+              }
+            },
+            {
+              "name": "5. Book Cardiology Appointment",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"doctorId\": \"replace-with-doctor-id-from-step-4\",\n  \"serviceId\": 1,\n  \"procedureId\": 1,\n  \"appointmentDatetime\": \"2025-07-25T10:30:00\",\n  \"durationMinutes\": 30,\n  \"reason\": \"Revisión cardiológica preventiva\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/book-appointment",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["book-appointment"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

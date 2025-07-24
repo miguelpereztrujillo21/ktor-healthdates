@@ -1,14 +1,7 @@
 package com.example.di
 
-import com.example.domain.repositories.IAppointmentRepository
-import com.example.domain.repositories.IPatientRepository
-import com.example.domain.repositories.IUserRepository
-import com.example.domain.usecases.BookAppointmentUseCase
-import com.example.domain.usecases.GetPatientAppointmentsUseCase
-import com.example.domain.usecases.IBookAppointmentUseCase
-import com.example.domain.usecases.IGetPatientAppointmentsUseCase
-import com.example.domain.usecases.LoginPatientUseCase
-import com.example.domain.usecases.RegisterPatientUseCase
+import com.example.domain.repositories.*
+import com.example.domain.usecases.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -55,5 +48,46 @@ class UseCaseModule {
         userRepository = userRepository,
         patientRepository = patientRepository,
         appointmentRepository = appointmentRepository
+    )
+
+    // Casos de uso de selección
+    @Provides
+    @Singleton
+    fun provideGetMedicalServicesUseCase(
+        medicalServiceRepository: IMedicalServiceRepository
+    ): IGetMedicalServicesUseCase = GetMedicalServicesUseCase(
+        medicalServiceRepository = medicalServiceRepository
+    )
+
+    @Provides
+    @Singleton
+    fun provideGetMedicalProceduresUseCase(
+        medicalProcedureRepository: IMedicalProcedureRepository
+    ): IGetMedicalProceduresUseCase = GetMedicalProceduresUseCase(
+        medicalProcedureRepository = medicalProcedureRepository
+    )
+
+    @Provides
+    @Singleton
+    fun provideGetProceduresByServiceUseCase(
+        medicalProcedureRepository: IMedicalProcedureRepository
+    ): IGetProceduresByServiceUseCase = GetProceduresByServiceUseCase(
+        medicalProcedureRepository = medicalProcedureRepository
+    )
+
+    @Provides
+    @Singleton
+    fun provideGetDoctorsByServiceUseCase(
+        doctorRepository: IDoctorRepository
+    ): IGetDoctorsByServiceUseCase = GetDoctorsByServiceUseCase(
+        doctorRepository = doctorRepository
+    )
+
+    @Provides
+    @Singleton
+    fun provideGetAvailableDoctorsUseCase(
+        doctorRepository: IDoctorRepository
+    ): IGetAvailableDoctorsUseCase = GetAvailableDoctorsUseCase(
+        doctorRepository = doctorRepository
     )
 }
