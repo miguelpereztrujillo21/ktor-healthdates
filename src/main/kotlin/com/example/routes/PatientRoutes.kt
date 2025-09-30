@@ -3,16 +3,20 @@ package com.example.routes
 
 import com.example.routes.models.RegisterPatientRequest
 import com.example.routes.models.LoginRequest
+
 import com.example.routes.models.BookAppointmentRequest
 import com.example.domain.usecases.LoginPatientUseCase
 import com.example.domain.usecases.RegisterPatientUseCase
 import com.example.domain.usecases.IGetPatientAppointmentsUseCase
 import com.example.domain.usecases.IBookAppointmentUseCase
+import com.example.domain.usecases.IGetPatientProfileUseCase
 import com.example.domain.utils.constants.Routes
 import com.example.domain.utils.constants.StatusCodeConstants
 import com.example.routes.mappers.toDomain
 import com.example.routes.mappers.toResponseList
 import com.example.routes.mappers.toResponse
+import com.example.routes.mappers.toPresentationPatient
+import com.example.routes.utils.extractUserIdFromToken
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.*
@@ -24,7 +28,8 @@ fun Route.patientRoutes(
     registerPatientUseCase: RegisterPatientUseCase,
     loginPatientUseCase: LoginPatientUseCase,
     getPatientAppointmentsUseCase: IGetPatientAppointmentsUseCase,
-    bookAppointmentUseCase: IBookAppointmentUseCase
+    bookAppointmentUseCase: IBookAppointmentUseCase,
+    getPatientProfileUseCase: IGetPatientProfileUseCase
 ) {
     post(Routes.PATIENTREGISTER) {
         try {
@@ -81,6 +86,27 @@ fun Route.patientRoutes(
             call.respond(HttpStatusCode.BadRequest, "Error: ${e.message}")
         } catch (e: Exception) {
             call.respond(HttpStatusCode.InternalServerError, "Error interno del servidor")
+        }
+    }
+    get(Routes.PATIENT_PROFILE) {
+        try {
+            val authHeader = call.request.headers["Authorization"]
+            val token = authHeader?.removePrefix("Bearer ")
+                ?: throw IllegalArgumentException("Token de autorización requerido")
+
+            val userId = extractUserIdFromToken(token)
+                ?: throw IllegalArgumentException("Token inválido")
+
+            val patient = getPatientProfileUseCase.getProfile(userId)
+            if (patient != null) {
+                call.respond(HttpStatusCode.OK, patient.toPresentationPatient())
+            } else {
+                call.respond(HttpStatusCode.NotFound, "Paciente no encontrado")
+            3}
+        } catch (e: IllegalArgumentException) {
+            call.respond(HttpStatusCode.BadRequest, "Error: ${e.message}")
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, "Error interno del servidor: ${e.message}")
         }
     }
 }

@@ -45,9 +45,17 @@ class UseCaseModule {
         patientRepository: IPatientRepository,
         appointmentRepository: IAppointmentRepository
     ): IBookAppointmentUseCase = BookAppointmentUseCase(
-        userRepository = userRepository,
-        patientRepository = patientRepository,
-        appointmentRepository = appointmentRepository
+        userRepository,
+        patientRepository,
+        appointmentRepository
+    )
+
+    @Provides
+    @Singleton
+    fun provideGetPatientProfileUseCase(
+        patientRepository: IPatientRepository
+    ): IGetPatientProfileUseCase = GetPatientProfileUseCase(
+        patientRepository = patientRepository
     )
 
     // Casos de uso de selección

@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import java.util.Base64
 import java.util.Date
+import java.util.UUID
 import javax.crypto.SecretKey
 
 class JwtTokenProvider {
@@ -17,26 +18,41 @@ class JwtTokenProvider {
         require(decodedSecret.size >= 32) { "La clave secreta debe tener al menos 256 bits (32 bytes)." }
     }
 
-    fun generateToken(email: String, role: String = "web_anon", expirationMillis: Long = AppConfig.jwtExpirationMillis): String {
+    // sub = UUID (como String). Se añade el correo en el claim "email".
+    fun generateToken(userId: UUID, email: String, role: String = "web_anon", expirationMillis: Long = AppConfig.jwtExpirationMillis): String {
         val now = System.currentTimeMillis()
         val exp = now + expirationMillis
         return Jwts.builder()
-            .setSubject(email)
+            .setSubject(userId.toString())
             .setExpiration(Date(exp))
+            .setIssuedAt(Date(now))
+            .claim("email", email)
             .claim("role", role)
-            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .signWith(secretKey, SignatureAlgorithm.HS256)
             .compact()
     }
 
-    fun extractEmailFromToken(token: String): String? {
-        return try {
+    fun extractUserIdFromToken(token: String): UUID? =
+        try {
             val claims = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
-            claims.body.subject
-        } catch (e: Exception) {
+                .body
+            UUID.fromString(claims.subject)
+        } catch (_: Exception) {
             null
         }
-    }
+
+    fun extractEmailFromToken(token: String): String? =
+        try {
+            val claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .body
+            (claims["email"] as? String) ?: claims.subject // respaldo si aún usas sub=email
+        } catch (_: Exception) {
+            null
+        }
 }

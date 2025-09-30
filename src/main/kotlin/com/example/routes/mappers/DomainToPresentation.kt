@@ -11,6 +11,7 @@ import com.example.routes.models.BookAppointmentRequest
 import com.example.routes.models.DoctorResponse
 import com.example.routes.models.ProcedureResponse
 import com.example.routes.models.ServiceResponse
+import com.example.presentation.dtos.PatientResponse
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -123,3 +124,23 @@ fun Doctor.toPresentationDoctor(): DoctorResponse = DoctorResponse(
     medicalCenterId = this.medicalCenterId,
     isActive = this.isActive
 )
+
+fun Patient.toPresentationPatient(): PatientResponse = PatientResponse(
+    id = this.id,
+    userId = this.userId,
+    firstName = this.firstName,
+    lastName = this.lastName,
+    secondLastName = this.secondLastName,
+    birthDate = this.birthDate?.toString(),
+    gender = this.gender,
+    address = this.address,
+    cityId = this.cityId,
+    phone = this.phone,
+    mobilePhone = this.mobilePhone,
+    emergencyContactName = this.emergencyContactName,
+    emergencyContactPhone = this.emergencyContactPhone,
+    nationalId = this.nationalId,
+    socialSecurityNumber = this.socialSecurityNumber,
+    createdAt = this.createdAt
+)
+

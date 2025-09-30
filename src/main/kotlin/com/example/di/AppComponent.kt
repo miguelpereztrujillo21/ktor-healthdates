@@ -21,7 +21,7 @@ interface AppComponent {
     fun loginPatientUseCase(): LoginPatientUseCase
     fun getPatientAppointmentsUseCase(): IGetPatientAppointmentsUseCase
     fun bookAppointmentUseCase(): IBookAppointmentUseCase
-
+    fun getPatientProfileUseCase(): IGetPatientProfileUseCase
     // Use Cases - Selection
     fun getMedicalServicesUseCase(): IGetMedicalServicesUseCase
     fun getMedicalProceduresUseCase(): IGetMedicalProceduresUseCase

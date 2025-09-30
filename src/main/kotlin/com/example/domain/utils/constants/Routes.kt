@@ -1,12 +1,16 @@
 package com.example.domain.utils.constants
 
 object Routes {
+    // Authentication routes
     const val REGISTER = "/register"
-    //PATIENT
+    const val LOGIN = "/login"
+
+    // Patient routes
     const val PATIENTREGISTER = "/register-patient"
     const val PATIENTLOGIN = "/login-patient"
     const val PATIENT_APPOINTMENTS = "/patient-appointments"
-    const val BOOK_APPOINTMENT = "/book-appointment"
+    const val BOOK_APPOINTMENT = "/patient-appointments"
+    const val PATIENT_PROFILE = "/patient-profile"
 
     // SELECTION ROUTES
     const val SELECTION = "/selection"

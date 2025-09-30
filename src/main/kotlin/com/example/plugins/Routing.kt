@@ -15,7 +15,8 @@ fun Application.configureRouting() {
             registerPatientUseCase = appComponent.registerPatientUseCase(),
             loginPatientUseCase = appComponent.loginPatientUseCase(),
             getPatientAppointmentsUseCase = appComponent.getPatientAppointmentsUseCase(),
-            bookAppointmentUseCase = appComponent.bookAppointmentUseCase()
+            bookAppointmentUseCase = appComponent.bookAppointmentUseCase(),
+            getPatientProfileUseCase = appComponent.getPatientProfileUseCase()
         )
         selectionRoutes(
             getMedicalServicesUseCase = appComponent.getMedicalServicesUseCase(),

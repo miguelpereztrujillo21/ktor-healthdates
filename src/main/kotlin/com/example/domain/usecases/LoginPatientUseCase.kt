@@ -11,7 +11,13 @@ class LoginPatientUseCase(
     override suspend fun login(email: String, password: String): String? {
         val user = userRepository.findByEmail(email)
         return if (user != null && BCrypt.checkpw(password, user.hashPassword)) {
-            jwtTokenProvider.generateToken(email, "web_anon", 3600000)
+            val userId = user.id ?: throw IllegalArgumentException("Usuario sin ID válido")
+            jwtTokenProvider.generateToken(
+                java.util.UUID.fromString(userId),
+                user.email,
+                user.role,
+                3600000L
+            )
         } else {
             null
         }

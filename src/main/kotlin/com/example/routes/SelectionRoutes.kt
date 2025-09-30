@@ -45,16 +45,15 @@ fun Route.selectionRoutes(
         get(Routes.SERVICES_BY_ID_PROCEDURES) {
             try {
                 val serviceId = call.parameters["serviceId"]?.toIntOrNull()
-                if (serviceId == null) {
-                    call.respond(HttpStatusCode.BadRequest, "ID de servicio inválido")
-                    return@get
-                }
+                    ?: throw IllegalArgumentException("ID de servicio inválido")
 
                 val procedures = getProceduresByServiceUseCase.execute(serviceId)
                 val procedureResponses = procedures.map { it.toPresentationMedicalProcedure() }
                 call.respond(HttpStatusCode.OK, procedureResponses)
+            } catch (e: IllegalArgumentException) {
+                call.respond(HttpStatusCode.BadRequest, "Error: ${e.message}")
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, "Error al obtener procedimientos: ${e.message}")
+                call.respond(HttpStatusCode.InternalServerError, "Error al obtener procedimientos por servicio: ${e.message}")
             }
         }
 
@@ -62,16 +61,15 @@ fun Route.selectionRoutes(
         get(Routes.SERVICES_BY_ID_DOCTORS) {
             try {
                 val serviceId = call.parameters["serviceId"]?.toIntOrNull()
-                if (serviceId == null) {
-                    call.respond(HttpStatusCode.BadRequest, "ID de servicio inválido")
-                    return@get
-                }
+                    ?: throw IllegalArgumentException("ID de servicio inválido")
 
                 val doctors = getDoctorsByServiceUseCase.execute(serviceId)
                 val doctorResponses = doctors.map { it.toPresentationDoctor() }
                 call.respond(HttpStatusCode.OK, doctorResponses)
+            } catch (e: IllegalArgumentException) {
+                call.respond(HttpStatusCode.BadRequest, "Error: ${e.message}")
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, "Error al obtener doctores: ${e.message}")
+                call.respond(HttpStatusCode.InternalServerError, "Error al obtener doctores por servicio: ${e.message}")
             }
         }
 
